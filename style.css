@@ -1,0 +1,460 @@
+element {
+  --name-title-height: 50px;
+  --create-message-height: 100px;
+}
+
+
+body {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(70, 69, 69);
+  border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(70, 69, 69);
+  border-radius: 10px;
+}
+
+.inputField{
+  width: 90%;
+  height: 40px;
+  font-size: 20px;
+  padding-left: 10px;
+  border: 1px solid #c1bbbb;
+}
+
+.leftsidebox {
+  z-index: 1;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  color: white;
+  height: 100%;
+  width: 20%;
+  position: absolute;
+      background-color: #ffffff;
+  overflow-y: scroll;
+  position: fixed;
+}
+.inpWrapper{
+  padding-right: 20px;
+}
+.userInpWrapper{
+  /* padding-left: 15px; */
+}
+.inputFieldWrapper{
+
+}
+.rightsidebox {
+  height: 100%;
+  /* background-color: #edf7f7; */
+  background-color: #ffffff;
+  width: 80%;
+  right: 0;
+  position: absolute;
+}
+
+.mainHead {
+  height: 10%;
+  position: absolute;
+  width: 100%;
+  text-align: center;
+}
+
+.nameTitle {
+  width: 100%;
+  font-size: 18px;
+  color: #3d3c3c;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 20px;
+  border-bottom: 2px solid #c1bbbb;
+  /* background-color: #009696; */
+  background-color: #efefef;
+  height: 50px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1), 0 3px 3px rgba(0,0,0,0.1);
+}
+
+.messageContents {
+  overflow-y: scroll;
+  position: absolute;
+  color: Black;
+  height: calc(100% - var(--name-title-height) - var(--create-message-height));
+  width: 100%;
+  padding-bottom: 150px;
+}
+
+.carrierSelectBox {
+  width: 100%;
+  border-bottom: 1px solid #d6d6d6;
+  background-color: #fbffff;
+  padding: 15px 0px;
+  color: #737171;;
+  font-size: 20px;
+  padding-bottom: 10px;
+  
+}
+
+.carrierSelectBox:active {
+  box-shadow: inset 0 3px 2px 0px rgba(0, 0, 0, 0), inset 0 3px 9px rgba(0, 0, 0, 0.7);
+background-color: white;
+}
+
+
+
+.userSelectBox {
+  width: 100%;
+  border-bottom: 1px solid #bebebe;
+  background-color: #efefef;
+  padding: 15px 10px;
+  color:#3d3c3c;
+  font-size: 20px; 
+  height : 0%;
+  -webkit-transition: all .8s ease;
+  -moz-transition: all .8s ease;
+  -ms-transition: all .8s ease;
+  -o-transition: all .8s ease;
+  transition: all .8s ease;
+  display: none;
+}
+
+/* .userSelectBox:first-child{
+  margin-top: 10px;
+} */
+
+.userSelectBox:hover {
+  box-shadow: inset 0 3px 2px 0px rgba(0, 0, 0, 0), inset 0 3px 9px rgba(0, 0, 0, 0.2);
+  background-color: #e0e0e0;
+  cursor: pointer;
+}
+
+.userSelectBox:active {
+  box-shadow: inset 0 3px 2px 0px rgba(0, 0, 0, 0), inset 0 3px 9px rgba(0, 0, 0, 0.7);
+background-color: #9c9e9e;
+color: #737171;
+}
+
+.boxActive {
+  background-color: #d2d2d2;
+  width: 100%;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.16), inset 0 3px 6px rgba(0, 0, 0, 0.23) !important;
+  cursor: default !important;
+}
+
+.boxActive:active {
+  box-shadow: inset 0 3px 2px 0px rgba(0, 0, 0, 0), inset 0 3px 9px rgba(0, 0, 0, 0.7) !important;
+background-color: #9c9e9e !important;
+}
+
+.fromElse {
+  margin-top: 10px;
+  position: relative;
+  background: #585757;
+  border-radius: .4em;
+  float: left;
+  width: 50%;
+  color: white;
+  margin-left: 10px;
+  padding: 10px;
+  min-height: 30px;
+}
+
+.fromElse:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border: 7px solid transparent;
+  border-left-color :#353535;
+  border-left: 0;
+  margin-top: -7px;
+  margin-left: -7px;
+}
+
+.fromMe {
+  margin-top: 10px;
+position: relative;
+background: #6f6f6f;
+border-radius: .4em;
+float: right;
+width: 50%;
+color: white;
+margin-right: 10px;
+padding: 10px;
+min-height: 30px;
+}
+
+
+
+.fromMe:after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border: 7px solid transparent;
+  border-left-color: #6f6f6f;
+  border-right: 0;
+  margin-top: -7px;
+  margin-right: -7px;
+}
+
+.createMessageBox {
+  height: 100px;
+  width: 100%;
+  background-color:white;
+  bottom: 0;
+  position: fixed;
+}
+
+.searchUserInp {
+width: 95%;
+  border: 1px solid #c1bbbb;
+  font-size: 20px;
+  padding-left: 0px;
+  font-weight: bolder;
+  list-style-type: none;
+}
+
+.searchUserBox {
+  background-color: #efefef;
+  text-align: center;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  padding-left: 15px;
+  border-bottom: #969393;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1), 0 3px 3px rgba(0,0,0,0.1);
+}
+
+.createTextArea {
+  width: calc(80% - 110px);
+  height: 100%;
+  font-size: 23px;
+  resize: none;
+}
+
+.sendMessageBtn {
+  width: 110px;
+  height: 100px;
+  background-color: #9c9898;
+  display: inline-block;
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.cuStyle {
+  color: white;
+  font-size: 80px;
+  padding: 10px 15px;
+}
+
+.sendMessageBtn:Hover {
+  background-color: #b1afaf;
+}
+
+.emptyText {
+  font-size: 40px;
+}
+.centerEmpty {
+  position: fixed;
+  color: #bebebe;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(0%, -50%);
+}
+
+.centerLoading {
+  position: fixed;
+  color: #005050;
+  text-align: center;
+  top: 44%;
+  left: 57%;
+  transform: translate(0%, -50%);
+}
+
+.iconStyle {
+  font-size: 160px;
+}
+
+.messageHead {
+  font-size: 12px;
+color: #edf7f7;
+}
+
+.divLoad {
+  text-align: center;
+  color: black;
+}
+
+.lds-facebook {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.lds-facebook div {
+  display: inline-block;
+  position: absolute;
+  left: 6px;
+  width: 13px;
+  background-color: #c7c3c3;;
+  animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.lds-facebook div:nth-child(1) {
+  left: 6px;
+  animation-delay: -0.24s;
+}
+.lds-facebook div:nth-child(2) {
+  left: 26px;
+  animation-delay: -0.12s;
+}
+.lds-facebook div:nth-child(3) {
+  left: 45px;
+  animation-delay: 0;
+}
+@keyframes lds-facebook {
+  0% {
+    top: 6px;
+    height: 51px;
+  }
+  50%, 100% {
+    top: 19px;
+    height: 26px;
+  }
+}
+
+.lds-facebook-main {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.lds-facebook-main div {
+  display: inline-block;
+  position: absolute;
+  left: 6px;
+  width: 26px;
+  background: #868585;
+  animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.lds-facebook-main div:nth-child(1) {
+  left: -30px;
+  animation-delay: -0.24s;
+}
+.lds-facebook-main div:nth-child(2) {
+  left: 7px;
+  animation-delay: -0.12s;
+}
+.lds-facebook-main div:nth-child(3) {
+  left: 45px;
+  animation-delay: 0;
+}
+@keyframes lds-facebook-main {
+  0% {
+    top: 6px;
+    height: 71px;
+  }
+  50%, 100% {
+    top: 18px;
+    height: 43px;
+  }
+}
+.userContClass {
+  cursor: pointer;
+  display: block;
+  color: #4D4D4D;
+  border-bottom: 1px solid #CCC;
+  /* position: relative; */
+  -webkit-transition: height 1.0s ease;
+  -o-transition: height 1.0s ease;
+  transition: height 1.0s ease;
+  height: 0%;
+}
+
+
+/* Rounded sliders */
+.slider.round {
+border-radius: 34px;
+}
+
+.slider.round:before {
+border-radius: 50%;
+}
+.switch {
+position: relative;
+display: inline-block;
+width: 60px;
+height: 34px;
+}
+
+.switch input { 
+opacity: 0;
+width: 0;
+height: 0;
+}
+
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: rgb(82, 80, 80);
+-webkit-transition: .4s;
+transition: .4s;
+}
+
+.slider:before {
+position: absolute;
+content: "";
+height: 26px;
+width: 26px;
+left: 4px;
+bottom: 4px;
+background-color: white;
+-webkit-transition: .4s;
+transition: .4s;
+}
+
+input:checked + .slider {
+background-color: #2196F3;
+}
+
+input:focus + .slider {
+box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+-webkit-transform: translateX(26px);
+-ms-transform: translateX(26px);
+transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+border-radius: 34px;
+}
+
+.slider.round:before {
+border-radius: 50%;
+}

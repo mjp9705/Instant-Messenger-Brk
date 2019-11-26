@@ -1,0 +1,42 @@
+<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<style>
+body {
+font-family: 'Montserrat', sans-serif;
+}
+element {
+        --name-title-height: 50px;
+        --create-message-height: 100px;
+    }
+
+.iconStyle {
+    font-size: 160px;
+}
+
+.messageBox{
+    overflow-y: scroll;
+        color: Black;
+        height: calc(100% - var(--name-title-height) - var(--create-message-height));
+        width: 100%;
+        text-align: center;
+}
+.emptyText {
+    font-size: 40px;
+}
+.centerEmpty {
+    position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+</style>
+
+<div class='messageBox'>
+    <div class='centerEmpty'>
+        <i class="fa fa-ban iconStyle"></i><br>
+        <p class='emptyText'>Message Box<br><b>Empty</b></p>
+    </div>
+</div>

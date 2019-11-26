@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Instant Messages</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="Description" content="IM Messaging Site">
+</head>
+
+
+<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="jquery.js"></script>
+<link href="style.css" rel="stylesheet">
+<div>
+    <div class='leftsidebox'>
+        <div class='searchUserBox'>
+            <div class = inpFieldWrapper>
+            <input class='inputField' type='text' placeholder='Please Enter a Carrier Code: '
+                onkeyup='checkInput()'></input>
+            </div>
+            <div style = 'padding-top: 20px;'>
+            <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider round"></span>
+            </label>
+        </div>
+            <div class='userInpWrapper'>
+                <ul class='searchUserInp' id='carrList' aria-label="Select Carrier"></select>
+            </div>
+            <!-- <input class='searchUserInp' aria-label="Select Truck" placeholder="Truck Search"> -->
+        </div>
+        <div id='loaderPieceTruck' class='divLoad'>
+            <div class="lds-facebook">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+    <div class='rightsidebox'>
+        <div class='nameTitle' id='currentViewTitle'> Brokerage Instant Messenger Application</div>
+        <div class='messageContents' id='dispMessages'>
+        </div>
+        <div class='createMessageBox'>
+            <textarea id='newMessText' class='createTextArea' aria-label="Type Message"
+                placeholder='Type Message Here'></textarea>
+            <button class='sendMessageBtn' aria-label="Send Message" id='sendMessage'>
+                <div><i class="fa fa-envelope cuStyle"></i></div>
+            </button>
+        </div>
+    </div>
+</div>
+<script src="script.js"></script>
+
+</html>
