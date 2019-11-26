@@ -24,7 +24,6 @@ function loadUsers(userId, isOpen) {
     else {
         //grab strictly the carrier code from the div's innerHTML....
         currentCarrier = document.getElementById(userId).innerHTML.substr(0, 6); //assure only the drivercode is retrieved from the innerHTML
-        console.log(currentCarrier);
     }
     if (isOpen === 'open') {
         //Display the carrier code when selected
@@ -47,7 +46,6 @@ function loadUsers(userId, isOpen) {
                     //if the div is already created for the carrier, do not create a new div...
                     userContId = userId + 'cont';
                     userContainer = document.getElementById(userContId);
-                    console.log(userContId);
                 }
                 else {
                     //if the carrier is being opened for the first time, create div for the container
@@ -55,29 +53,15 @@ function loadUsers(userId, isOpen) {
                     userContainer.id = userId + 'cont';
                     userContId = userId + 'cont';
                     userContainer.classList.add('userContClass');
-                    console.log(userContId);
                     existsObj[userId] = true;
-                }
-                // if the carrier has already been opened once and it is above the current carrier
-                //take into account this div when inserting the new container.... 
-                existsKeys = Object.keys(existsObj);
-                console.log('contcount ' + contCount)
-                for (let i = 0; i < existsKeys.length; i++) {
-                    if (existsKeys[i] < userId && existsObj[existsKeys[i]] == true) {
-                        console.log('incrementing contcount')
-                        contCount++;
-                        console.log(contCount)
+                    existsKeys = Object.keys(existsObj);
+                    //assuring that the correct group of trucks open under the correct carriers....
+                    for (let i = 0; i < existsKeys.length; i++) {
+                        if (existsKeys[i] < userId && existsObj[existsKeys[i]] == true) {
+                            contCount++;
+                        }
                     }
-                }
-                //taking into account carries w/no trucks that
-                contCount = contCount - emptyCount;
-                if (url['hits'].length === 0) {
-                    userId = parseInt(userId, 10);
-                    console.log(userId + 1 + contCount)
-                    emptyCount++;
-                }
-                else {
-                    //create the divs for the trucks of a specific carrier...
+                    //creating and inserting trucks under the correct carrier
                     for (x = 0; x < url['hits'].length; x++) {
                         document.getElementById(userId).style = 'padding-bottom: 10px';
                         createUser = document.createElement("DIV");
@@ -88,9 +72,6 @@ function loadUsers(userId, isOpen) {
                         userId = parseInt(userId, 10)
                         userContainer.appendChild(createUser);
                         insertLoc = userId + 1 + contCount;
-                        console.log('insert loc = ' + insertLoc);
-                        console.log('user id = ' + userId)
-                        console.log('user id = ' + contCount)
                         carrList.insertBefore(userContainer, carrList.children[insertLoc]);
                         preceedingUsers = 0;
                         if (userCount[userId] >= 1) {
@@ -101,62 +82,57 @@ function loadUsers(userId, isOpen) {
                         }
                     }
                 }
-                console.log(userContId)
-                console.log('test')
-            }
-            else{
-                userCount[userId] = 0;
-                userId = userId + 'cont';
             }
             contCount = 0;
+            userId = userId + 'cont';
             document.getElementById('loaderPieceTruck').style.display = 'none';
-            myTrucks = document.getElementById(userContId).children;
+            //retrieve the child elements of the user container
+            myTrucks = document.getElementById(userId).children;
             let enlargeCont = 100 / myTrucks.length
-            console.log(myTrucks.length)
             let factor = 1;
             let shrinkCont = 100 / myTrucks.length
             let decfactor = 1;
+            let total_height = 0;
+            let open_height = 100;
             //recursively displaying users when a carrier is selected...
-            console.log(isOpen)
             if (isOpen === 'open') {
-                console.log('opening')
                 displayAnimation(enlargeCont, factor, 0);
+                //if all of the trucks have been displayed, break out of the loop.
                 function displayAnimation(enlargeCont, factor, trucknum) {
-                    console.log(enlargeCont, factor, trucknum)
-                    if (enlargeCont <= 100) { //break when the height reaches 100%
-                        document.getElementById(userContId).style.height = (enlargeCont * factor) + '%';
+                    if (trucknum <= myTrucks.length) { //break when the height reaches 100%
+                        document.getElementById(userContId).style.height = (total_height + enlargeCont) + '%';
+                        total_height = total_height + enlargeCont;
                         factor++; //factor by which the height is being increased....
-                        enlargeCont = enlargeCont * factor;
                         myTrucks[trucknum].style.display = 'block';
                         trucknum++
                         setTimeout(function () { displayAnimation(enlargeCont, factor, trucknum); }, 100);
                     }
                 }
+                trucknum = 0;
             }
-            else{
-                console.log('closing')
+            else {
+                userCount[userId] = 0;
+                userId = userId + 'cont';
                 closingAnimation(shrinkCont, decfactor, 0);
-                function closingAnimation(shrinkCont, decfactor, trucknum){
-                    console.log(shrinkCont, decfactor, trucknum)
-                    if(shrinkCont <= 100){
-                        document.getElementById(userContId).style.height = (1 - shrinkCont * factor) + '%';
+                //if all of the trucks have been closed out of, break out of the loop.
+                function closingAnimation(shrinkCont, decfactor, trucknum) {
+                    if (trucknum <= myTrucks.length) {
+                        document.getElementById(userContId).style.height = (open_height - shrinkCont) + '%';
+                        open_height = open_height - shrinkCont;
                         decfactor++; //factor by which the height is being increased....
-                        shrinkCont = shrinkCont * decfactor;
                         myTrucks[trucknum].style.display = 'none';
-                        trucknum++
+                        trucknum++;
                         setTimeout(function () { closingAnimation(shrinkCont, decfactor, trucknum); }, 100);
                     }
                 }
-                userCount[userId] = 0;
-                userId = userId + 'cont';
-                // document.getElementById(userId).style = 'padding-bottom: 0px', 'background-color: white';
-                // document.getElementById(userId).innerHTML = document.getElementById(userId).innerHTML.substr(0, 6);
+                trucknum = 0;
             }
         }
     });
 }
 //switching the active selected truck....
 function switchSelectedTruck(truck) {
+    //set the title to whichever driver's messages you are viewing.
     document.getElementById('currentViewTitle').innerHTML = truck.innerHTML;
     currentTruck = truck.innerHTML;
     currentElement = document.getElementsByClassName("boxActive");
@@ -183,13 +159,11 @@ function loadMessages(truckCode, discreet) {
         dataType: 'json',
         url: "grabMessages.php",
         success: function (url) {
-
             historyLength = url['hits'].length;
             messageView = document.getElementById("dispMessages");
             messageView.innerHTML = '';
-
             if (historyLength == 0) {
-                test = "<div class='centerEmpty'><i class='fa fa-ban iconStyle'></i><br><p class='emptyText'>Message Box<br><b>Empty</b></p></div>";
+                test = "<div class='centerEmpty'><i class='fad fa-truck-moving'></i><br><p class='emptyText'>Select a truck number<br><b>(Shaded Gray)</b></p></div>";
                 messageView.innerHTML = test;
             } else {
                 for (x = 0; x < historyLength; x++) {
@@ -238,7 +212,6 @@ function checkInput() {
 
     let userInp = document.querySelector('.inputField').value
     userInp = userInp.toUpperCase();
-    console.log(userInp);
     //filters out the carriers as characters are entered....
     for (let i = 0; i < carrierHolder.length; i++) {
         if (!carrierHolder[i].innerHTML.includes(userInp)) {
