@@ -5,7 +5,7 @@ $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $sqlGrabCarriers = "SELECT LBCARR from EDGETSTLIB.LOAPPBRK where LBCARR = 'RUMEN' or LBCARR = 'MMMBBQ' or LBCARR = 'IMGLLC'
 or LBCARR = 'A&DFRE'";
 
-$sqlGrabCarriers = "SELECT LBCARR from EDGETSTLIB.LOAPPBRK";
+$sqlGrabCarriers = "select distinct(LTPRMCAR) as LBCARR from edgetstlib.loapptrk";
 
 $getCarriers = $con->prepare($sqlGrabCarriers);
 $getCarriers->execute();
