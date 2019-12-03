@@ -446,6 +446,12 @@ box-shadow: 0 0 1px #2196F3;
 .fad.fa-truck-moving {
   font-size: 150px;
   }
+  .fad.fa-globe-americas {
+    font-size: 250px;
+    }
+    .fal.fa-comment-alt-slash {
+      font-size: 225px;
+      }
 input:checked + .slider:before {
 -webkit-transform: translateX(26px);
 -ms-transform: translateX(26px);

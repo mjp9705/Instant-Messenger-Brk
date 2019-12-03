@@ -31,12 +31,16 @@ function loadUsers(userId, isOpen) {
     if (isOpen === 'open') {
         //Display the carrier code when selected
         document.getElementById('currentViewTitle').innerHTML = 'Instant Messages - ' + currentCarrier;
+        messageView = document.getElementById("dispMessages");
+        test = "<div class='centerEmpty'><i class='fad fa-truck-moving'></i><br><p class='emptyText'>Select a truck number<br></p></div>";
+        messageView.innerHTML = test;
     }
     else {
         document.getElementById('currentViewTitle').innerHTML = '';
+        messageView.innerHTML = '';
     }
     document.getElementById('loaderPieceTruck').style.display = 'block';
-    document.getElementById("dispMessages").innerHTML = '';
+    // document.getElementById("dispMessages").innerHTML = '';
     $.ajax({
         type: "POST",
         data: { "carrier": currentCarrier },
@@ -179,7 +183,7 @@ function loadMessages(truckCode, discreet, currentCarrier) {
             messageView = document.getElementById("dispMessages");
             messageView.innerHTML = '';
             if (historyLength == 0) {
-                test = "<div class='centerEmpty'><i class='fad fa-truck-moving'></i><br><p class='emptyText'>Select a truck number<br></p></div>";
+                test = "<div class='centerEmpty'><i class='fal fa-comment-alt-slash'></i><br><p class='emptyText'>No messages available.<br></p></div>";
                 messageView.innerHTML = test;
             }
             else {
@@ -268,7 +272,7 @@ function loadCarriers() {
                 createOption.classList.add('carrierSelectBox')
                 createOption.setAttribute("id", i);
                 let messageView = document.getElementById('dispMessages');
-                let userGuidance = "<div class='centerEmpty'><i class='fad fa-truck-moving'></i><br><p class='emptyText'>Select a truck number<br><b>(Shaded Gray)</b></p></div>";
+                let userGuidance = "<div class='centerEmpty'><i class='fad fa-truck-moving'></i><br><p class='emptyText'>Select a truck number<br></p></div>";
                 messageView.innerHTML = userGuidance;
                 carrList = document.getElementById('carrList');
                 carrList.appendChild(createOption);
@@ -338,7 +342,7 @@ function sendMessage() {
 
 loadCarriers();
 let messageView = document.getElementById('dispMessages');
-let userGuidance = "<div class='centerEmpty'><i class='fad fa-truck-moving'></i><br><p class='emptyText'>Select a truck number<br><b>(Shaded Gray)</b></p></div>";
+let userGuidance = "<div class='centerEmpty'><i class='fad fa-globe-americas'></i><br><p class='emptyText'>Select a carrier<br></p></div>";
 messageView.innerHTML = userGuidance;
 var theTimer = setInterval(function () {
     if (currentTruck !== '') {
