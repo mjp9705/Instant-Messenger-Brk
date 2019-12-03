@@ -15,6 +15,8 @@ let existsKeys = [];
 let contCount = 0;
 let myTrucks;
 let emptyCount = 0;
+let viewingTruck = false;
+let truckID;
 
 function loadUsers(userId, isOpen) {
     //fixing issue for carriers beginning with 'A&'....
@@ -24,6 +26,7 @@ function loadUsers(userId, isOpen) {
     else {
         //grab strictly the carrier code from the div's innerHTML....
         currentCarrier = document.getElementById(userId).innerHTML.substr(0, 6); //assure only the drivercode is retrieved from the innerHTML
+        console.log(currentCarrier)
     }
     if (isOpen === 'open') {
         //Display the carrier code when selected
@@ -65,10 +68,12 @@ function loadUsers(userId, isOpen) {
                     for (x = 0; x < url['hits'].length; x++) {
                         document.getElementById(userId).style = 'padding-bottom: 10px';
                         createUser = document.createElement("DIV");
-                        createUser.innerHTML = url['hits'][x]['LTTRKCODE'] + " (" + url['hits'][x]['LTDSPTRK'] + ")";
+                        createUser.innerHTML = url['hits'][x]['LTTRKCODE'] + " (" + url['hits'][x]['LTDSPTRK'].trim() + ")";
                         createUser.classList.add('userSelectBox');
-                        createUser.onclick = function () { switchSelectedTruck(this) };
-                        createUser.onclick = function () { switchSelectedTruck(this) };
+                        truckID = 'truckID' + x;
+                        createUser.id = truckID;
+                        createUser.onclick = function () { switchSelectedTruck(this, userId) };
+                        createUser.onclick = function () { switchSelectedTruck(this, userId) };
                         userId = parseInt(userId, 10)
                         userContainer.appendChild(createUser);
                         insertLoc = userId + 1 + contCount;
@@ -131,20 +136,30 @@ function loadUsers(userId, isOpen) {
     });
 }
 //switching the active selected truck....
-function switchSelectedTruck(truck) {
+var testVar;
+let updatedCarr = 0;
+function switchSelectedTruck(truck, userContainer) {
+    console.log('entering truck switcher')
+    console.log(userContainer);
+    updatedCarr = parseInt(userContainer)
+    console.log(updatedCarr);
+    updatedCarr = document.getElementById(updatedCarr).innerHTML;
     //set the title to whichever driver's messages you are viewing.
-    document.getElementById('currentViewTitle').innerHTML = truck.innerHTML;
+    document.getElementById('currentViewTitle').innerHTML = '<b>' + updatedCarr + '</b> ' + ' -' + truck.innerHTML + '</pre>';
     currentTruck = truck.innerHTML;
     currentElement = document.getElementsByClassName("boxActive");
     if (currentElement.length != 0) {
         currentElement[0].classList.remove('boxActive')
     }
     truck.classList.add('boxActive');
-    loadMessages(truck.innerHTML, 'newView');
+    console.log(updatedCarr);
+    loadMessages(truck.innerHTML, 'newView', updatedCarr);
 }
 
 //loading messages
-function loadMessages(truckCode, discreet) {
+function loadMessages(truckCode, discreet, currentCarrier) {
+    console.log(currentCarrier);
+    console.log(truckCode);
     if (discreet == 'hidden') {
         messageView = document.getElementById("dispMessages");
     } else {
@@ -160,12 +175,14 @@ function loadMessages(truckCode, discreet) {
         url: "grabMessages.php",
         success: function (url) {
             historyLength = url['hits'].length;
+            console.log(currentCarrier);
             messageView = document.getElementById("dispMessages");
             messageView.innerHTML = '';
             if (historyLength == 0) {
-                test = "<div class='centerEmpty'><i class='fad fa-truck-moving'></i><br><p class='emptyText'>Select a truck number<br><b>(Shaded Gray)</b></p></div>";
+                test = "<div class='centerEmpty'><i class='fad fa-truck-moving'></i><br><p class='emptyText'>Select a truck number<br></p></div>";
                 messageView.innerHTML = test;
-            } else {
+            }
+            else {
                 for (x = 0; x < historyLength; x++) {
                     createMessage = document.createElement("DIV");
                     messageStamp = document.createElement("DIV");
@@ -236,6 +253,7 @@ function checkInput() {
 }
 
 let carrierHolder = [];
+// let messageViewTwo = '';
 function loadCarriers() {
     $.ajax({
         type: "GET",
@@ -249,32 +267,32 @@ function loadCarriers() {
                 createOption.innerHTML = url['hits'][i]['LBCARR'];
                 createOption.classList.add('carrierSelectBox')
                 createOption.setAttribute("id", i);
-
+                let messageView = document.getElementById('dispMessages');
+                let userGuidance = "<div class='centerEmpty'><i class='fad fa-truck-moving'></i><br><p class='emptyText'>Select a truck number<br><b>(Shaded Gray)</b></p></div>";
+                messageView.innerHTML = userGuidance;
                 carrList = document.getElementById('carrList');
                 carrList.appendChild(createOption);
-
                 carrierPlaceHolder.push(createOption.innerHTML)
                 carrierHolder.push(createOption);
                 checkEmpty[carrierHolder[i].id] = false;
-
                 createOption.onclick = function () {
                     //closing an opened carrier....
                     if (carrStatus[this.id] === 'open') {
-                        currentCarrierId = this.id
-                        isIdSame = true;
+                        currentCarrierId = this.id;
                         totalOpens = totalOpens + 1;
                         if (totalOpens === 1) {
                             currentCarrierId = ''; //reset string or else it will not let user reopen..
                             totalOpens = 0;
                         }
                         carrStatus[this.id] = 'closed';
+                        console.log(this.id)
                         loadUsers(this.id, carrStatus[this.id], null)
                     }
                     else {
                         carrStatus[this.id] = 'open';
                         clearOld = currentCarrierId;
                         currentCarrierId = this.id;
-                        isIdSame = false;
+                        console.log(carrStatus[this.id])
                         loadUsers(this.id, carrStatus[this.id], clearOld)
                     }
 
@@ -305,6 +323,7 @@ function sendMessage() {
         body: JSON.stringify(data),
     }).then(function (response) {
         if (response.status == '200') {
+            console.log(currentCarrier);
             loadMessages(currentTruck, 'messSent');
             document.getElementById("newMessText").value = '';
 
@@ -318,7 +337,16 @@ function sendMessage() {
 }
 
 loadCarriers();
-var theTimer = setInterval(function () { loadMessages(currentTruck, 'hidden') }, 60 * 1000); //runs every minute
+let messageView = document.getElementById('dispMessages');
+let userGuidance = "<div class='centerEmpty'><i class='fad fa-truck-moving'></i><br><p class='emptyText'>Select a truck number<br><b>(Shaded Gray)</b></p></div>";
+messageView.innerHTML = userGuidance;
+var theTimer = setInterval(function () {
+    if (currentTruck !== '') {
+        loadMessages(currentTruck, 'hidden')
+    }
+}, 60 * 1000); //runs every minute
+
+
 document.getElementById("sendMessage").addEventListener("click", sendMessage, false)
 
 

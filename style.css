@@ -123,11 +123,11 @@ background-color: white;
   color:#3d3c3c;
   font-size: 20px; 
   height : 0%;
-  -webkit-transition: all .8s ease;
-  -moz-transition: all .8s ease;
-  -ms-transition: all .8s ease;
-  -o-transition: all .8s ease;
-  transition: all .8s ease;
+  -webkit-transition: all .4s ease;
+  -moz-transition: all .4s ease;
+  -ms-transition: all .4s ease;
+  -o-transition: all .4s ease;
+  transition: all .4s ease;
   display: none;
 }
 
@@ -223,21 +223,21 @@ min-height: 30px;
   position: fixed;
 }
 
-.searchUserInp {
-width: 95%;
-  border: 1px solid #c1bbbb;
-  font-size: 20px;
-  padding-left: 0px;
-  font-weight: bolder;
-  list-style-type: none;
+  .searchUserInp {
+    width: 100%;
+    border: 1px solid #c1bbbb;
+    font-size: 20px;
+    padding-left: 0px;
+    font-weight: bolder;
+    list-style-type: none;
 }
 
 .searchUserBox {
   background-color: #efefef;
   text-align: center;
   padding-top: 14px;
-  padding-bottom: 14px;
-  padding-left: 15px;
+  /* padding-bottom: 14px; */
+  /* padding-left: 15px; */
   border-bottom: #969393;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1), 0 3px 3px rgba(0,0,0,0.1);
 }
