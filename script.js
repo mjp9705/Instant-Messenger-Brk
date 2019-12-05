@@ -126,7 +126,7 @@ function loadUsers(userId, isOpen) {
                 console.log(elems);
 
                 elems.forEach(element => {
-                    console.log('test');
+                    console.log('tests');
                     console.log(element);
                     console.log(document.getElementById(userId))
                     if (document.getElementById(userId).contains(element)){
