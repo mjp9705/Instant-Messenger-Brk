@@ -121,8 +121,21 @@ function loadUsers(userId, isOpen) {
             }
             else {
                 userCount[userId] = 0;
-                userId = userId + 'cont';
+                //remove active class from the current selected truck when closing a carrier.....
+                var elems = document.querySelectorAll(".boxActive");
+                console.log(elems);
+
+                elems.forEach(element => {
+                    console.log('test');
+                    console.log(element);
+                    console.log(document.getElementById(userId))
+                    if (document.getElementById(userId).contains(element)){
+                        element.classList.remove("boxActive")
+                    }
+                });
+
                 closingAnimation(shrinkCont, decfactor, 0);
+
                 //if all of the trucks have been closed out of, break out of the loop.
                 function closingAnimation(shrinkCont, decfactor, trucknum) {
                     if (trucknum <= myTrucks.length) {
