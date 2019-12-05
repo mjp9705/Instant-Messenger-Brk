@@ -26,19 +26,26 @@ function loadUsers(userId, isOpen) {
     else {
         //grab strictly the carrier code from the div's innerHTML....
         currentCarrier = document.getElementById(userId).innerHTML.substr(0, 6); //assure only the drivercode is retrieved from the innerHTML
-        console.log(currentCarrier)
     }
     if (isOpen === 'open') {
         //Display the carrier code when selected
         document.getElementById('currentViewTitle').innerHTML = 'Instant Messages - ' + currentCarrier;
+        var activeElems = document.querySelectorAll(".boxActive");
         messageView = document.getElementById("dispMessages");
-        test = "<div class='centerEmpty'><i class='fad fa-truck-moving'></i><br><p class='emptyText'>Select a truck number<br></p></div>";
-        messageView.innerHTML = test;
+        //allows user to open another carrier w/o losing messages from the active truck from a diff carrier
+        if (activeElems.length === 0) {
+            test = "<div class='centerEmpty'><i class='fad fa-truck-moving'></i><br><p class='emptyText'>Select a truck number<br></p></div>";
+            messageView.innerHTML = test;
+        }
     }
-    else {
-        document.getElementById('currentViewTitle').innerHTML = '';
-        messageView.innerHTML = '';
-    }
+    // else {
+    //     var activeElems = document.querySelectorAll(".boxActive");
+    //     console.log(activeElems)
+    //     if (activeElems.length === 0) {
+    //         document.getElementById('currentViewTitle').innerHTML = '';
+    //         messageView.innerHTML = '';
+    //     }
+    // }
     document.getElementById('loaderPieceTruck').style.display = 'block';
     // document.getElementById("dispMessages").innerHTML = '';
     $.ajax({
@@ -123,16 +130,19 @@ function loadUsers(userId, isOpen) {
                 userCount[userId] = 0;
                 //remove active class from the current selected truck when closing a carrier.....
                 var elems = document.querySelectorAll(".boxActive");
-                console.log(elems);
-
                 elems.forEach(element => {
-                    console.log('my samples testss');
-                    console.log(element);
-                    console.log(document.getElementById(userId))
-                    if (document.getElementById(userId).contains(element)){
+                    if (document.getElementById(userId).contains(element)) {
                         element.classList.remove("boxActive")
                     }
                 });
+
+                // if user is closing a carrier, but a truck msg tab is open in another carrier, keep msgs up
+                messageView = document.getElementById("dispMessages");
+                var activeElems = document.querySelectorAll(".boxActive");
+                if (activeElems.length === 0) {
+                    document.getElementById('currentViewTitle').innerHTML = '';
+                    messageView.innerHTML = '';
+                }
 
                 closingAnimation(shrinkCont, decfactor, 0);
 
@@ -159,7 +169,6 @@ function switchSelectedTruck(truck, userContainer) {
     console.log('entering truck switcher')
     console.log(userContainer);
     updatedCarr = parseInt(userContainer)
-    console.log(updatedCarr);
     updatedCarr = document.getElementById(updatedCarr).innerHTML;
     //set the title to whichever driver's messages you are viewing.
     document.getElementById('currentViewTitle').innerHTML = '<b>' + updatedCarr + '</b> ' + ' -' + truck.innerHTML + '</pre>';
@@ -169,14 +178,11 @@ function switchSelectedTruck(truck, userContainer) {
         currentElement[0].classList.remove('boxActive')
     }
     truck.classList.add('boxActive');
-    console.log(updatedCarr);
     loadMessages(truck.innerHTML, 'newView', updatedCarr);
 }
 
 //loading messages
 function loadMessages(truckCode, discreet, currentCarrier) {
-    console.log(currentCarrier);
-    console.log(truckCode);
     if (discreet == 'hidden') {
         messageView = document.getElementById("dispMessages");
     } else {
@@ -192,7 +198,6 @@ function loadMessages(truckCode, discreet, currentCarrier) {
         url: "grabMessages.php",
         success: function (url) {
             historyLength = url['hits'].length;
-            console.log(currentCarrier);
             messageView = document.getElementById("dispMessages");
             messageView.innerHTML = '';
             if (historyLength == 0) {
@@ -298,14 +303,12 @@ function loadCarriers() {
                             totalOpens = 0;
                         }
                         carrStatus[this.id] = 'closed';
-                        console.log(this.id)
                         loadUsers(this.id, carrStatus[this.id], null)
                     }
                     else {
                         carrStatus[this.id] = 'open';
                         clearOld = currentCarrierId;
                         currentCarrierId = this.id;
-                        console.log(carrStatus[this.id])
                         loadUsers(this.id, carrStatus[this.id], clearOld)
                     }
 
@@ -352,7 +355,6 @@ function sendMessage() {
 loadCarriers();
 let messageView = document.getElementById('dispMessages');
 let userGuidance = "<div class='centerEmpty'><i class='fad fa-globe-americas'></i><br><p class='emptyText'>Select a carrier<br></p></div>";
-console.log('test')
 messageView.innerHTML = userGuidance;
 var theTimer = setInterval(function () {
     if (currentTruck !== '') {
