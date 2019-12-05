@@ -241,7 +241,7 @@ function checkInput() {
                 checkEmpty[carrierHolder[i].id] = true;
                 carrierCount = carrierCount + 1;
                 if (carrierCount === carrierHolder.length) {
-                    document.getElementById('carrList').innerHTML = 'Carrier not found..'
+                    document.getElementById('carrList').innerHTML = 'Carriers not found..'
                 }
             }
         }
@@ -257,7 +257,6 @@ function checkInput() {
 }
 
 let carrierHolder = [];
-// let messageViewTwo = '';
 function loadCarriers() {
     $.ajax({
         type: "GET",
@@ -342,7 +341,7 @@ function sendMessage() {
 
 loadCarriers();
 let messageView = document.getElementById('dispMessages');
-let userGuidance = "<div class='centerEmpty'><i class='fad fa-globe-americas'></i><br><p class='emptyText'>Select a carrier<br></p></div>";
+let userGuidance = "<div class='centerEmpty'><i class='fad fa-globe-americas'></i><br><p class='emptyText'>Select a carriers<br></p></div>";
 messageView.innerHTML = userGuidance;
 var theTimer = setInterval(function () {
     if (currentTruck !== '') {
