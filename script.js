@@ -113,8 +113,8 @@ function loadUsers(userId, isOpen) {
                         total_height = total_height + enlargeCont;
                         factor++; //factor by which the height is being increased....
                         myTrucks[trucknum].style.display = 'block';
-                        trucknum++
-                        setTimeout(function () { displayAnimation(enlargeCont, factor, trucknum); }, 100);
+                        trucknum++;
+                        setTimeout(function () { displayAnimation(enlargeCont, factor, trucknum); }, 50);
                     }
                 }
                 trucknum = 0;
@@ -131,7 +131,7 @@ function loadUsers(userId, isOpen) {
                         decfactor++; //factor by which the height is being increased....
                         myTrucks[trucknum].style.display = 'none';
                         trucknum++;
-                        setTimeout(function () { closingAnimation(shrinkCont, decfactor, trucknum); }, 100);
+                        setTimeout(function () { closingAnimation(shrinkCont, decfactor, trucknum); }, 50);
                     }
                 }
                 trucknum = 0;
@@ -183,7 +183,7 @@ function loadMessages(truckCode, discreet, currentCarrier) {
             messageView = document.getElementById("dispMessages");
             messageView.innerHTML = '';
             if (historyLength == 0) {
-                test = "<div class='centerEmpty'><i class='fal fa-comment-alt-slash'></i><br><p class='emptyText'>No messages available.<br></p></div>";
+                test = "<div class='centerEmpty'><i class='fal fa-comment-alt-slash'></i><br><p class='emptyText'>No messages available<br></p></div>";
                 messageView.innerHTML = test;
             }
             else {
@@ -240,9 +240,6 @@ function checkInput() {
                 document.getElementById(carrierHolder[i].id).style.display = 'none';
                 checkEmpty[carrierHolder[i].id] = true;
                 carrierCount = carrierCount + 1;
-                if (carrierCount === carrierHolder.length) {
-                    document.getElementById('carrList').innerHTML = 'Carriers not found..'
-                }
             }
         }
         else if (checkEmpty[carrierHolder[i].id] === true && carrierPlaceHolder[i].includes(userInp)) {
@@ -341,7 +338,8 @@ function sendMessage() {
 
 loadCarriers();
 let messageView = document.getElementById('dispMessages');
-let userGuidance = "<div class='centerEmpty'><i class='fad fa-globe-americas'></i><br><p class='emptyText'>Select a carriers<br></p></div>";
+let userGuidance = "<div class='centerEmpty'><i class='fad fa-globe-americas'></i><br><p class='emptyText'>Select a carrier<br></p></div>";
+console.log('test')
 messageView.innerHTML = userGuidance;
 var theTimer = setInterval(function () {
     if (currentTruck !== '') {
