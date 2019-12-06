@@ -37,15 +37,6 @@ function loadUsers(userId, isOpen) {
             test = "<div class='centerEmpty'><i class='fad fa-truck-moving'></i><br><p class='emptyText'>Select a truck number<br></p></div>";
             messageView.innerHTML = test;
         }
-    }
-    // else {
-    //     var activeElems = document.querySelectorAll(".boxActive");
-    //     console.log(activeElems)
-    //     if (activeElems.length === 0) {
-    //         document.getElementById('currentViewTitle').innerHTML = '';
-    //         messageView.innerHTML = '';
-    //     }
-    // }
     document.getElementById('loaderPieceTruck').style.display = 'block';
     // document.getElementById("dispMessages").innerHTML = '';
     $.ajax({
@@ -55,7 +46,6 @@ function loadUsers(userId, isOpen) {
         dataType: 'json',
         url: "grabMsgTrucks.php",
         success: function (url) {
-            if (isOpen === 'open') { //if the user is opening a carrier
                 if (existsObj[userId] === true) {
                     //if the div is already created for the carrier, do not create a new div...
                     userContId = userId + 'cont';
@@ -98,7 +88,6 @@ function loadUsers(userId, isOpen) {
                         }
                     }
                 }
-            }
             contCount = 0;
             userId = userId + 'cont';
             document.getElementById('loaderPieceTruck').style.display = 'none';
@@ -106,28 +95,31 @@ function loadUsers(userId, isOpen) {
             myTrucks = document.getElementById(userId).children;
             let enlargeCont = 100 / myTrucks.length
             let factor = 1;
-            let shrinkCont = 100 / myTrucks.length
-            let decfactor = 1;
             let total_height = 0;
-            let open_height = 100;
             //recursively displaying users when a carrier is selected...
-            if (isOpen === 'open') {
                 displayAnimation(enlargeCont, factor, 0);
                 //if all of the trucks have been displayed, break out of the loop.
                 function displayAnimation(enlargeCont, factor, trucknum) {
-                    if (trucknum <= myTrucks.length) { //break when the height reaches 100%
+                    if (trucknum < myTrucks.length) { //break when the height reaches 100%
                         document.getElementById(userContId).style.height = (total_height + enlargeCont) + '%';
                         total_height = total_height + enlargeCont;
                         factor++; //factor by which the height is being increased....
+                        console.log(myTrucks)
                         myTrucks[trucknum].style.display = 'block';
                         trucknum++;
                         setTimeout(function () { displayAnimation(enlargeCont, factor, trucknum); }, 50);
                     }
-                }
-                trucknum = 0;
             }
+            trucknum = 0;
+        }
+    });
+}
+
             else {
+                userContId = userId + 'cont';
                 userCount[userId] = 0;
+                // contCount--;
+
                 //remove active class from the current selected truck when closing a carrier.....
                 var elems = document.querySelectorAll(".boxActive");
                 elems.forEach(element => {
@@ -143,25 +135,30 @@ function loadUsers(userId, isOpen) {
                     document.getElementById('currentViewTitle').innerHTML = '';
                     messageView.innerHTML = '';
                 }
+                myTrucks = document.getElementById(userContId).children;
+                console.log(myTrucks.length)
+                let shrinkCont = 100 / myTrucks.length
+                let decfactor = 1;
+                let open_height = 100;
 
                 closingAnimation(shrinkCont, decfactor, 0);
-
                 //if all of the trucks have been closed out of, break out of the loop.
                 function closingAnimation(shrinkCont, decfactor, trucknum) {
-                    if (trucknum <= myTrucks.length) {
+                    if (trucknum < myTrucks.length) {
+                        console.log(userContId);
                         document.getElementById(userContId).style.height = (open_height - shrinkCont) + '%';
                         open_height = open_height - shrinkCont;
                         decfactor++; //factor by which the height is being increased....
+                        console.log(myTrucks)
                         myTrucks[trucknum].style.display = 'none';
                         trucknum++;
-                        setTimeout(function () { closingAnimation(shrinkCont, decfactor, trucknum); }, 50);
+                        setTimeout(function () { closingAnimation(shrinkCont, decfactor, trucknum); }, 100);
                     }
                 }
                 trucknum = 0;
             }
         }
-    });
-}
+
 //switching the active selected truck....
 var testVar;
 let updatedCarr = 0;
@@ -231,6 +228,7 @@ function loadMessages(truckCode, discreet, currentCarrier) {
         }
     });
 }
+
 let carrierPlaceHolder = [];
 let checkEmpty = {};
 let usersArray = [];
