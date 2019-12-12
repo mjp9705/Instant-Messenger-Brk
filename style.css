@@ -37,6 +37,8 @@ div {
   font-size: 20px;
   padding-left: 10px;
   border: 1px solid #c1bbbb;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .leftsidebox {
