@@ -168,7 +168,7 @@ function switchSelectedTruck(truck, userContainer) {
     updatedCarr = parseInt(userContainer)
     updatedCarr = document.getElementById(updatedCarr).innerHTML;
     //set the title to whichever driver's messages you are viewing.
-    document.getElementById('currentViewTitle').innerHTML = '<b>' + updatedCarr + '</b> ' + ' -' + truck.innerHTML + '</pre>';
+    document.getElementById('currentViewTitle').innerHTML = '<div id = "titleCont">' + '<b>' + updatedCarr + '</b> ' + ' -' + truck.innerHTML + '</pre>' + '</div>';
     currentTruck = truck.innerHTML;
     currentElement = document.getElementsByClassName("boxActive");
     if (currentElement.length != 0) {
@@ -180,6 +180,7 @@ function switchSelectedTruck(truck, userContainer) {
 
 //loading messages
 function loadMessages(truckCode, discreet, currentCarrier) {
+    console.log(currentCarrier);
     if (discreet == 'hidden') {
         messageView = document.getElementById("dispMessages");
     } else {
@@ -338,7 +339,7 @@ function sendMessage() {
     }).then(function (response) {
         if (response.status == '200') {
             console.log(currentCarrier);
-            loadMessages(currentTruck, 'messSent');
+            loadMessages(currentTruck, 'messSent', currentCarrier);
             document.getElementById("newMessText").value = '';
 
             document.getElementById('sendMessage').disabled = false;
@@ -349,14 +350,38 @@ function sendMessage() {
         }
     })
 }
+let msgdisplay;
+let msgindex = 0;
+window.onload = function()
+{
+   window.onscroll = this.moveHeader
+   {
+      console.log("Calling this function");
+   }
+}
+function moveHeader(){
+    if($(window).scrollTop()){
+        //begin to scroll
+        console.log("scrolling.....")
+        $("#currentViewTitle").css("position","fixed");
+        $("#titleCont").css("position", "static");
+        $("#titleCont").css("margin-right", 383)
+    }
+    else{
+        //lock it back into place
+        console.log("putting back into place...")
+        $("#currentViewTitle").css("position","relative");
+        $("#titleCont").css("margin-right", 0)
 
+    }
+}
 loadCarriers();
 let messageView = document.getElementById('dispMessages');
-let userGuidance = "<div class='centerEmpty'><i class='fad fa-globe-americas'></i><br><p class='emptyText'>Select a carrier<br></p></div>";
+let userGuidance = "<div class='centerEmptyGlobe'><i class='fad fa-globe-americas'></i><br><p class='emptyText'>Select a carrier<br></p></div>";
 messageView.innerHTML = userGuidance;
 var theTimer = setInterval(function () {
     if (currentTruck !== '') {
-        loadMessages(currentTruck, 'hidden')
+        loadMessages(currentTruck, 'hidden', currentCarrier)
     }
 }, 60 * 1000); //runs every minute
 

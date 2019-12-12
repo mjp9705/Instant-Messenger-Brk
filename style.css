@@ -30,6 +30,7 @@ div {
   border-radius: 10px;
 }
 
+
 .inputField{
   width: 90%;
   height: 40px;
@@ -79,6 +80,7 @@ div {
   font-size: 18px;
   color: #3d3c3c;
   text-align: center;
+  z-index: 5;
   padding: 10px 0;
   font-size: 20px;
   border-bottom: 2px solid #c1bbbb;
@@ -104,6 +106,8 @@ div {
   padding: 15px 0px;
   color: #737171;;
   font-size: 20px;
+  text-overflow: ellipsis;
+  overflow: hidden;
   padding-bottom: 10px;
   
 }
@@ -130,6 +134,8 @@ background-color: white;
   border-bottom: 1px solid #bebebe;
   background-color: #efefef;
   padding: 15px 10px;
+  text-overflow: ellipsis;
+  overflow: hidden;
   color:#3d3c3c;
   font-size: 20px; 
   height : 0%;
@@ -235,7 +241,7 @@ min-height: 30px;
 
   .searchUserInp {
     width: 100%;
-    border: 1px solid #c1bbbb;
+    /* border: 1px solid #c1bbbb; */
     font-size: 20px;
     padding-left: 0px;
     font-weight: bolder;
@@ -290,6 +296,14 @@ min-height: 30px;
   top: 50%;
   left: 50%;
   transform: translate(0%, -50%);
+}
+.centerEmptyGlobe {
+  position: fixed;
+  color: #bebebe;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+    transform: translate(0%, -50%);
 }
 
 .centerLoading {
@@ -454,13 +468,13 @@ input:focus + .slider {
 box-shadow: 0 0 1px #2196F3;
 }
 .fad.fa-truck-moving {
-  font-size: 150px;
+  font-size: 200px;
   }
   .fad.fa-globe-americas {
-    font-size: 250px;
+    font-size: 16em;
     }
     .fal.fa-comment-alt-slash {
-      font-size: 225px;
+      font-size: 220px;
       }
 input:checked + .slider:before {
 -webkit-transform: translateX(26px);
@@ -475,4 +489,30 @@ border-radius: 34px;
 
 .slider.round:before {
 border-radius: 50%;
+}
+
+@media only screen and (max-width: 1400px){
+  .fad.fa-truck-moving {
+    font-size: 120px;
+    }
+      .fal.fa-comment-alt-slash {
+        font-size: 120px;
+      }
+      .centerEmpty{
+        left: 45%;
+      }
+      .fad.fa-globe-americas {
+        font-size: 12em;
+        }
+}
+@media only screen and (max-width: 900px){
+.fad.fa-globe-americas {
+  font-size: 12em;
+  }
+  .centerEmpty{
+    left: 40%;
+  }
+  .centerEmptyGlobe{
+    left: 40%;
+  }
 }

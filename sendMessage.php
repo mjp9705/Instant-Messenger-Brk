@@ -42,33 +42,33 @@ $driverTwo = '';
 
 // $currentUser = $_SERVER['REMOTE_USER'];
 $currentUser = strtoupper(get_current_user());
-
+var_dump($sentInfo);
 
 $truckCode= substr($sentInfo->messageTruck, 0, 6);
 $carrierCode = $sentInfo->messageCarrier;
 $messContents = $sentInfo->messageContent;
+echo $truckCode;
+// //Grabs Driver codes based off of Truck and Carrier
+// $sqlGrabDriverByTruck = 'SELECT trim(LTDRV1) as DRIVERONE, trim(LTDRV2) as DRIVERTWO from EDGETSTLIB.LOAPPTRK where LTPRMCAR = :carrierCode and LTPRMTRK = :truckCode limit 1';
+// $getDrivers = $con->prepare($sqlGrabDriverByTruck);
+// $getDrivers->execute(array(":carrierCode"=>$carrierCode, ":truckCode"=>$truckCode));
+// $CheckResults = $getDrivers->fetchAll(PDO::FETCH_ASSOC);
+// $driverOne = $CheckResults[0]['DRIVERONE'];
+// $driverTwo = $CheckResults[0]['DRIVERTWO'];
 
-//Grabs Driver codes based off of Truck and Carrier
-$sqlGrabDriverByTruck = 'SELECT trim(LTDRV1) as DRIVERONE, trim(LTDRV2) as DRIVERTWO from EDGETSTLIB.LOAPPTRK where LTPRMCAR = :carrierCode and LTPRMTRK = :truckCode limit 1';
-$getDrivers = $con->prepare($sqlGrabDriverByTruck);
-$getDrivers->execute(array(":carrierCode"=>$carrierCode, ":truckCode"=>$truckCode));
-$CheckResults = $getDrivers->fetchAll(PDO::FETCH_ASSOC);
-$driverOne = $CheckResults[0]['DRIVERONE'];
-$driverTwo = $CheckResults[0]['DRIVERTWO'];
 
+// if ($messContents != '') {
+//   $sqlSendMessage = "INSERT INTO EDGETSTLIB.LOAPPSTS
+//   (LSMSGCMPTS, LSPFLG, LSEVENT, LSEVENTTS, LSCARR, LSTRK, LSDRV1, LSDRV2, LSCOOKIE, LSMSG_ID, LSSERVERTS, LSIPADDR, LSRESPONSE, LSCMPUSR)
+//   VALUES
+//   (:currTimeOne, 'N', 'MESSAGEOUT', :currTimeTwo, :carrCode, :truckCode, :driverOne, :driverTwo, 'webportal', :theGUID, :currTimeThree, :theIP, :theMessage, :currentUser)";
 
-if ($messContents != '') {
-  $sqlSendMessage = "INSERT INTO EDGETSTLIB.LOAPPSTS
-  (LSMSGCMPTS, LSPFLG, LSEVENT, LSEVENTTS, LSCARR, LSTRK, LSDRV1, LSDRV2, LSCOOKIE, LSMSG_ID, LSSERVERTS, LSIPADDR, LSRESPONSE, LSCMPUSR)
-  VALUES
-  (:currTimeOne, 'N', 'MESSAGEOUT', :currTimeTwo, :carrCode, :truckCode, :driverOne, :driverTwo, 'webportal', :theGUID, :currTimeThree, :theIP, :theMessage, :currentUser)";
-
-  $sendMessage = $con->prepare($sqlSendMessage);
-  $sendMessage->execute(array(":currTimeOne"=>$timeStamp, ":currTimeTwo"=>$timeStamp, ":carrCode"=>$carrierCode, ":truckCode"=>$truckCode, ":driverOne"=>$driverOne, ":driverTwo"=>$driverTwo, ":theGUID"=>$theGUID, ":currTimeThree"=>$timeStamp, ":theIP"=>$userIP, ":theMessage"=>$messContents, ":currentUser"=>$currentUser ));
-  echo 'Success';
-} else {
-  echo 'Message Box Empty';
-}
+//   $sendMessage = $con->prepare($sqlSendMessage);
+//   $sendMessage->execute(array(":currTimeOne"=>$timeStamp, ":currTimeTwo"=>$timeStamp, ":carrCode"=>$carrierCode, ":truckCode"=>$truckCode, ":driverOne"=>$driverOne, ":driverTwo"=>$driverTwo, ":theGUID"=>$theGUID, ":currTimeThree"=>$timeStamp, ":theIP"=>$userIP, ":theMessage"=>$messContents, ":currentUser"=>$currentUser ));
+//   echo 'Success';
+// } else {
+//   echo 'Message Box Empty';
+// }
 
 
 
