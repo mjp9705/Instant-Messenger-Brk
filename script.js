@@ -226,6 +226,7 @@ function loadMessages(truckCode, discreet, currentCarrier) {
                     messageView.appendChild(createMessage);
                 }
             }
+            window.scrollTo(0,document.getElementById('dispMessages').scrollHeight);
         }
     });
 }
@@ -366,6 +367,7 @@ function moveHeader(){
         $("#currentViewTitle").css("position","fixed");
         $("#titleCont").css("position", "static");
         $("#titleCont").css("margin-right", 383)
+        $('#yourDiv').scrollTop($('#yourDiv')[0].scrollHeight);
     }
     else{
         //lock it back into place
