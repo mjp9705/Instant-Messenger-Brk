@@ -17,7 +17,8 @@ let myTrucks;
 let emptyCount = 0;
 let viewingTruck = false;
 let truckID;
-
+let spinnerCt = 0;
+let spinnerObj = {};
 function loadUsers(userId, isOpen) {
     //fixing issue for carriers beginning with 'A&'....
     if (document.getElementById(userId).innerHTML.substr(0, 2) === 'A&') {
@@ -47,9 +48,21 @@ function loadUsers(userId, isOpen) {
         url: "grabMsgTrucks.php",
         success: function (url) {
                 if (existsObj[userId] === true) {
+                    if(userId in spinnerObj === false){
+                        spinnerObj[userId] = 1;
+                        console.log('entering');
+                    }
+                    else{
+                    spinnerObj[userId]++
+                    }
                     //if the div is already created for the carrier, do not create a new div...
                     userContId = userId + 'cont';
                     userContainer = document.getElementById(userContId);
+                    let removeSpinners = document.getElementById(userId).childNodes
+                    removeSpinners = Array.from(removeSpinners);
+                    removeSpinners = removeSpinners.filter(className => className.className == 'lds-ring');
+                    console.log(removeSpinners);
+                    removeSpinners[spinnerObj[userId]].style.display = 'none';
                 }
                 else {
                     //if the carrier is being opened for the first time, create div for the container
@@ -87,6 +100,10 @@ function loadUsers(userId, isOpen) {
                             userCount[userId] = 1;
                         }
                     }
+                    let removeSpinners = document.getElementById(userId).childNodes
+                    removeSpinners = Array.from(removeSpinners);
+                    removeSpinners = removeSpinners.filter(className => className.className == 'lds-ring');
+                    removeSpinners[0].style.display = 'none';
                 }
             contCount = 0;
             userId = userId + 'cont';
@@ -104,7 +121,6 @@ function loadUsers(userId, isOpen) {
                         document.getElementById(userContId).style.height = (total_height + enlargeCont) + '%';
                         total_height = total_height + enlargeCont;
                         factor++; //factor by which the height is being increased....
-                        console.log(myTrucks)
                         myTrucks[trucknum].style.display = 'block';
                         trucknum++;
                         setTimeout(function () { displayAnimation(enlargeCont, factor, trucknum); }, 50);
@@ -118,7 +134,6 @@ function loadUsers(userId, isOpen) {
             else {
                 userContId = userId + 'cont';
                 userCount[userId] = 0;
-                // contCount--;
 
                 //remove active class from the current selected truck when closing a carrier.....
                 var elems = document.querySelectorAll(".boxActive");
@@ -136,7 +151,6 @@ function loadUsers(userId, isOpen) {
                     messageView.innerHTML = '';
                 }
                 myTrucks = document.getElementById(userContId).children;
-                console.log(myTrucks.length)
                 let shrinkCont = 100 / myTrucks.length
                 let decfactor = 1;
                 let open_height = 100;
@@ -145,11 +159,9 @@ function loadUsers(userId, isOpen) {
                 //if all of the trucks have been closed out of, break out of the loop.
                 function closingAnimation(shrinkCont, decfactor, trucknum) {
                     if (trucknum < myTrucks.length) {
-                        console.log(userContId);
                         document.getElementById(userContId).style.height = (open_height - shrinkCont) + '%';
                         open_height = open_height - shrinkCont;
                         decfactor++; //factor by which the height is being increased....
-                        console.log(myTrucks)
                         myTrucks[trucknum].style.display = 'none';
                         trucknum++;
                         setTimeout(function () { closingAnimation(shrinkCont, decfactor, trucknum); }, 100);
@@ -163,8 +175,6 @@ function loadUsers(userId, isOpen) {
 var testVar;
 let updatedCarr = 0;
 function switchSelectedTruck(truck, userContainer) {
-    console.log('entering truck switcher')
-    console.log(userContainer);
     updatedCarr = parseInt(userContainer)
     updatedCarr = document.getElementById(updatedCarr).innerHTML;
     //set the title to whichever driver's messages you are viewing.
@@ -175,12 +185,13 @@ function switchSelectedTruck(truck, userContainer) {
         currentElement[0].classList.remove('boxActive')
     }
     truck.classList.add('boxActive');
+    console.log(truck.innerHTML);
+    updatedCarr = updatedCarr.substr(0, 6);
     loadMessages(truck.innerHTML, 'newView', updatedCarr);
 }
 
 //loading messages
 function loadMessages(truckCode, discreet, currentCarrier) {
-    console.log(currentCarrier);
     if (discreet == 'hidden') {
         messageView = document.getElementById("dispMessages");
     } else {
@@ -303,12 +314,15 @@ function loadCarriers() {
                             totalOpens = 0;
                         }
                         carrStatus[this.id] = 'closed';
+                        document.getElementById(this.id).innerHTML += '';
                         loadUsers(this.id, carrStatus[this.id], null)
                     }
                     else {
                         carrStatus[this.id] = 'open';
+                        console.log(this.id)
                         clearOld = currentCarrierId;
                         currentCarrierId = this.id;
+                        document.getElementById(currentCarrierId).innerHTML += '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>';
                         loadUsers(this.id, carrStatus[this.id], clearOld)
                     }
 
@@ -339,7 +353,6 @@ function sendMessage() {
         body: JSON.stringify(data),
     }).then(function (response) {
         if (response.status == '200') {
-            console.log(currentCarrier);
             loadMessages(currentTruck, 'messSent', currentCarrier);
             document.getElementById("newMessText").value = '';
 
@@ -360,6 +373,7 @@ window.onload = function()
       console.log("Calling this function");
    }
 }
+//function used to default load the most recent msgs
 function moveHeader(){
     if($(window).scrollTop()){
         //begin to scroll
