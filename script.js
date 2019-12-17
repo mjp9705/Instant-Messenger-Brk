@@ -19,6 +19,7 @@ let viewingTruck = false;
 let truckID;
 let spinnerCt = 0;
 let spinnerObj = {};
+
 function loadUsers(userId, isOpen) {
     //fixing issue for carriers beginning with 'A&'....
     if (document.getElementById(userId).innerHTML.substr(0, 2) === 'A&') {
@@ -47,6 +48,7 @@ function loadUsers(userId, isOpen) {
         dataType: 'json',
         url: "grabMsgTrucks.php",
         success: function (url) {
+                //assuring spinners appear properly
                 if (existsObj[userId] === true) {
                     if(userId in spinnerObj === false){
                         spinnerObj[userId] = 1;
@@ -58,6 +60,8 @@ function loadUsers(userId, isOpen) {
                     //if the div is already created for the carrier, do not create a new div...
                     userContId = userId + 'cont';
                     userContainer = document.getElementById(userContId);
+
+                    //removing spinners when the users are loaded
                     let removeSpinners = document.getElementById(userId).childNodes
                     removeSpinners = Array.from(removeSpinners);
                     removeSpinners = removeSpinners.filter(className => className.className == 'lds-ring');
@@ -100,6 +104,7 @@ function loadUsers(userId, isOpen) {
                             userCount[userId] = 1;
                         }
                     }
+                    //removing spinners when the users are loaded
                     let removeSpinners = document.getElementById(userId).childNodes
                     removeSpinners = Array.from(removeSpinners);
                     removeSpinners = removeSpinners.filter(className => className.className == 'lds-ring');
@@ -237,6 +242,7 @@ function loadMessages(truckCode, discreet, currentCarrier) {
                     messageView.appendChild(createMessage);
                 }
             }
+            //most recent (bottom) messages show when the user selects a truck.
             window.scrollTo(0,document.getElementById('dispMessages').scrollHeight);
         }
     });
@@ -247,6 +253,7 @@ let checkEmpty = {};
 let usersArray = [];
 let openUsers;
 
+//removes open trucks when a user searches for a carrier...
 function searchCleanup(openUsers) {
     for (let i = 0; i < openUsers.length; i++) {
         openUsers[i].style.display = 'none';
@@ -259,7 +266,7 @@ function checkInput() {
     //removing users from other carriers when searching...
     openUsers = searchCleanup(openUsers)
     let carrierCount = 0;
-
+        
     let userInp = document.querySelector('.inputField').value
     userInp = userInp.toUpperCase();
     //filters out the carriers as characters are entered....
