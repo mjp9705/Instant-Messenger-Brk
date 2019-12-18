@@ -20,7 +20,7 @@ let truckID;
 let spinnerCt = 0;
 let spinnerObj = {};
 
-function loadUsers(userId, isOpen) {
+function loadUsers(userId, isOpen, currentCarrierId) {
     //fixing issue for carriers beginning with 'A&'....
     if (document.getElementById(userId).innerHTML.substr(0, 2) === 'A&') {
         currentCarrier = document.getElementById(userId).innerHTML.substr(0, 2) + document.getElementById(userId).innerHTML.substr(6, 10)
@@ -39,23 +39,22 @@ function loadUsers(userId, isOpen) {
             test = "<div class='centerEmpty'><i class='fad fa-truck-moving'></i><br><p class='emptyText'>Select a truck number<br></p></div>";
             messageView.innerHTML = test;
         }
-    document.getElementById('loaderPieceTruck').style.display = 'block';
-    // document.getElementById("dispMessages").innerHTML = '';
-    $.ajax({
-        type: "POST",
-        data: { "carrier": currentCarrier },
-        async: true,
-        dataType: 'json',
-        url: "grabMsgTrucks.php",
-        success: function (url) {
+        document.getElementById('loaderPieceTruck').style.display = 'block';
+        // document.getElementById("dispMessages").innerHTML = '';
+        $.ajax({
+            type: "POST",
+            data: { "carrier": currentCarrier },
+            async: true,
+            dataType: 'json',
+            url: "grabMsgTrucks.php",
+            success: function (url) {
                 //assuring spinners appear properly
                 if (existsObj[userId] === true) {
-                    if(userId in spinnerObj === false){
+                    if (userId in spinnerObj === false) {
                         spinnerObj[userId] = 1;
-                        console.log('entering');
                     }
-                    else{
-                    spinnerObj[userId]++
+                    else {
+                        spinnerObj[userId]++
                     }
                     //if the div is already created for the carrier, do not create a new div...
                     userContId = userId + 'cont';
@@ -65,7 +64,6 @@ function loadUsers(userId, isOpen) {
                     let removeSpinners = document.getElementById(userId).childNodes
                     removeSpinners = Array.from(removeSpinners);
                     removeSpinners = removeSpinners.filter(className => className.className == 'lds-ring');
-                    console.log(removeSpinners);
                     removeSpinners[spinnerObj[userId]].style.display = 'none';
                 }
                 else {
@@ -105,20 +103,21 @@ function loadUsers(userId, isOpen) {
                         }
                     }
                     //removing spinners when the users are loaded
-                    let removeSpinners = document.getElementById(userId).childNodes
-                    removeSpinners = Array.from(removeSpinners);
-                    removeSpinners = removeSpinners.filter(className => className.className == 'lds-ring');
-                    removeSpinners[0].style.display = 'none';
                 }
-            contCount = 0;
-            userId = userId + 'cont';
-            document.getElementById('loaderPieceTruck').style.display = 'none';
-            //retrieve the child elements of the user container
-            myTrucks = document.getElementById(userId).children;
-            let enlargeCont = 100 / myTrucks.length
-            let factor = 1;
-            let total_height = 0;
-            //recursively displaying users when a carrier is selected...
+                let removeSpinners = document.getElementById(userId).childNodes
+                removeSpinners = Array.from(removeSpinners);
+                removeSpinners = removeSpinners.filter(className => className.className == 'lds-ring');
+                removeSpinners[0].style.display = 'none';
+                removeSpinners[0].innerHTML = '';
+                contCount = 0;
+                userId = userId + 'cont';
+                document.getElementById('loaderPieceTruck').style.display = 'none';
+                //retrieve the child elements of the user container
+                myTrucks = document.getElementById(userId).children;
+                let enlargeCont = 100 / myTrucks.length
+                let factor = 1;
+                let total_height = 0;
+                //recursively displaying users when a carrier is selected...
                 displayAnimation(enlargeCont, factor, 0);
                 //if all of the trucks have been displayed, break out of the loop.
                 function displayAnimation(enlargeCont, factor, trucknum) {
@@ -130,56 +129,57 @@ function loadUsers(userId, isOpen) {
                         trucknum++;
                         setTimeout(function () { displayAnimation(enlargeCont, factor, trucknum); }, 50);
                     }
-            }
-            trucknum = 0;
-        }
-    });
-}
-
-            else {
-                userContId = userId + 'cont';
-                userCount[userId] = 0;
-
-                //remove active class from the current selected truck when closing a carrier.....
-                var elems = document.querySelectorAll(".boxActive");
-                elems.forEach(element => {
-                    if (document.getElementById(userId).contains(element)) {
-                        element.classList.remove("boxActive")
-                    }
-                });
-
-                // if user is closing a carrier, but a truck msg tab is open in another carrier, keep msgs up
-                messageView = document.getElementById("dispMessages");
-                var activeElems = document.querySelectorAll(".boxActive");
-                if (activeElems.length === 0) {
-                    document.getElementById('currentViewTitle').innerHTML = '';
-                    messageView.innerHTML = '';
-                }
-                myTrucks = document.getElementById(userContId).children;
-                let shrinkCont = 100 / myTrucks.length
-                let decfactor = 1;
-                let open_height = 100;
-
-                closingAnimation(shrinkCont, decfactor, 0);
-                //if all of the trucks have been closed out of, break out of the loop.
-                function closingAnimation(shrinkCont, decfactor, trucknum) {
-                    if (trucknum < myTrucks.length) {
-                        document.getElementById(userContId).style.height = (open_height - shrinkCont) + '%';
-                        open_height = open_height - shrinkCont;
-                        decfactor++; //factor by which the height is being increased....
-                        myTrucks[trucknum].style.display = 'none';
-                        trucknum++;
-                        setTimeout(function () { closingAnimation(shrinkCont, decfactor, trucknum); }, 100);
-                    }
                 }
                 trucknum = 0;
             }
+        });
+    }
+
+    else {
+        userContId = userId + 'cont';
+        userCount[userId] = 0;
+
+        //remove active class from the current selected truck when closing a carrier.....
+        var elems = document.querySelectorAll(".boxActive");
+        elems.forEach(element => {
+            if (document.getElementById(userId).contains(element)) {
+                element.classList.remove("boxActive")
+            }
+        });
+
+        // if user is closing a carrier, but a truck msg tab is open in another carrier, keep msgs up
+        messageView = document.getElementById("dispMessages");
+        var activeElems = document.querySelectorAll(".boxActive");
+        if (activeElems.length === 0) {
+            document.getElementById('currentViewTitle').innerHTML = '';
+            messageView.innerHTML = '';
         }
+        myTrucks = document.getElementById(userContId).children;
+        let shrinkCont = 100 / myTrucks.length
+        let decfactor = 1;
+        let open_height = 100;
+
+        closingAnimation(shrinkCont, decfactor, 0);
+        //if all of the trucks have been closed out of, break out of the loop.
+        function closingAnimation(shrinkCont, decfactor, trucknum) {
+            if (trucknum < myTrucks.length) {
+                document.getElementById(userContId).style.height = (open_height - shrinkCont) + '%';
+                open_height = open_height - shrinkCont;
+                decfactor++; //factor by which the height is being increased....
+                myTrucks[trucknum].style.display = 'none';
+                trucknum++;
+                setTimeout(function () { closingAnimation(shrinkCont, decfactor, trucknum); }, 100);
+            }
+        }
+        trucknum = 0;
+    }
+}
 
 //switching the active selected truck....
 var testVar;
 let updatedCarr = 0;
 function switchSelectedTruck(truck, userContainer) {
+    console.log('user cont: ' + userContainer)
     updatedCarr = parseInt(userContainer)
     updatedCarr = document.getElementById(updatedCarr).innerHTML;
     //set the title to whichever driver's messages you are viewing.
@@ -190,13 +190,14 @@ function switchSelectedTruck(truck, userContainer) {
         currentElement[0].classList.remove('boxActive')
     }
     truck.classList.add('boxActive');
-    console.log(truck.innerHTML);
-    updatedCarr = updatedCarr.substr(0, 6);
-    loadMessages(truck.innerHTML, 'newView', updatedCarr);
+    currentCarrier = updatedCarr.substr(0, 6);
+    loadMessages(truck.innerHTML, 'newView', currentCarrier);
 }
 
 //loading messages
+let truckMsgs = {};
 function loadMessages(truckCode, discreet, currentCarrier) {
+    // truckCode = truckCode.substr(0, 6);
     if (discreet == 'hidden') {
         messageView = document.getElementById("dispMessages");
     } else {
@@ -243,7 +244,7 @@ function loadMessages(truckCode, discreet, currentCarrier) {
                 }
             }
             //most recent (bottom) messages show when the user selects a truck.
-            window.scrollTo(0,document.getElementById('dispMessages').scrollHeight);
+            window.scrollTo(0, document.getElementById('dispMessages').scrollHeight);
         }
     });
 }
@@ -258,15 +259,19 @@ function searchCleanup(openUsers) {
     for (let i = 0; i < openUsers.length; i++) {
         openUsers[i].style.display = 'none';
     }
+    //if user edits seach while a carrier is open, set that carrier to closed
+    Object.keys(carrStatus).forEach(v => carrStatus[v] = 'closed')
     return openUsers;
 }
+
 //filters out carriers when user searches....
 function checkInput() {
     let openUsers = document.getElementsByClassName('userSelectBox');
+
     //removing users from other carriers when searching...
     openUsers = searchCleanup(openUsers)
     let carrierCount = 0;
-        
+
     let userInp = document.querySelector('.inputField').value
     userInp = userInp.toUpperCase();
     //filters out the carriers as characters are entered....
@@ -326,11 +331,10 @@ function loadCarriers() {
                     }
                     else {
                         carrStatus[this.id] = 'open';
-                        console.log(this.id)
                         clearOld = currentCarrierId;
                         currentCarrierId = this.id;
                         document.getElementById(currentCarrierId).innerHTML += '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>';
-                        loadUsers(this.id, carrStatus[this.id], clearOld)
+                        loadUsers(this.id, carrStatus[this.id], currentCarrierId)
                     }
 
                 }
@@ -373,41 +377,43 @@ function sendMessage() {
 }
 let msgdisplay;
 let msgindex = 0;
-window.onload = function()
-{
-   window.onscroll = this.moveHeader
-   {
-      console.log("Calling this function");
-   }
+window.onload = function () {
+    window.onscroll = this.moveHeader
+    {
+        console.log("Calling this function");
+    }
 }
 //function used to default load the most recent msgs
-function moveHeader(){
-    if($(window).scrollTop()){
+function moveHeader() {
+    if ($(window).scrollTop()) {
         //begin to scroll
-        console.log("scrolling.....")
-        $("#currentViewTitle").css("position","fixed");
+        $("#currentViewTitle").css("position", "fixed");
         $("#titleCont").css("position", "static");
         $("#titleCont").css("margin-right", 383)
-        $('#yourDiv').scrollTop($('#yourDiv')[0].scrollHeight);
+        // $('#yourDiv').scrollTop($('#yourDiv')[0].scrollHeight);
     }
-    else{
+    else {
         //lock it back into place
         console.log("putting back into place...")
-        $("#currentViewTitle").css("position","relative");
+        $("#currentViewTitle").css("position", "relative");
         $("#titleCont").css("margin-right", 0)
 
     }
 }
-loadCarriers();
 let messageView = document.getElementById('dispMessages');
 let userGuidance = "<div class='centerEmptyGlobe'><i class='fad fa-globe-americas'></i><br><p class='emptyText'>Select a carrier<br></p></div>";
 messageView.innerHTML = userGuidance;
 var theTimer = setInterval(function () {
+
+    console.log('current truck: ' + currentTruck)
+    console.log('current carrier: ' + currentCarrier)
+
     if (currentTruck !== '') {
         loadMessages(currentTruck, 'hidden', currentCarrier)
     }
-}, 60 * 1000); //runs every minute
+}, 60 * 100); //runs every minute
 
+loadCarriers();
 
 document.getElementById("sendMessage").addEventListener("click", sendMessage, false)
 
