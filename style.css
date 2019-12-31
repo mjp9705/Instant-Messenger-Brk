@@ -522,22 +522,74 @@ box-shadow: 0 0 1px #2196F3;
     .fal.fa-comment-alt-slash {
       font-size: 220px;
       }
-input:checked + .slider:before {
--webkit-transform: translateX(180px);
--ms-transform: translateX(180px);
-transform: translateX(180px);
-}
-.buttonTextStyle{
-  padding-top:10px;
-}
-/* Rounded sliders */
-.slider {
-border-radius: 34px;
-}
 
-.slider:before {
-border-radius: 100%;
-}
+      .container {
+        display: inline-block;
+        position: relative;
+        padding-left: 26px;
+        /* margin-bottom: 12px; */
+        cursor: pointer;
+        font-size: 15px;
+        color: #737171;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      
+      /* Hide the browser's default checkbox */
+      .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+      }
+      
+      /* Create a custom checkbox */
+      .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 18px;
+        width: 18px;
+        background-color: #7b7b7b;
+      }
+      
+      /* On mouse-over, add a grey background color */
+      .container:hover input ~ .checkmark {
+        background-color: #ccc;
+      }
+      
+      /* When the checkbox is checked, add a blue background */
+      .container input:checked:hover ~ .checkmark {
+        background-color: #ccc;
+      }
+      
+      /* Create the checkmark/indicator (hidden when not checked) */
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: block;
+      }
+      
+      /* Show the checkmark when checked */
+      .container input:checked ~ .checkmark:after {
+        display: none;
+      }
+      
+      /* Style the checkmark/indicator */
+      .container .checkmark:after {
+        left: 5px;
+        top: 2px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
 
 @media only screen and (max-width: 1400px){
   .fad.fa-truck-moving {

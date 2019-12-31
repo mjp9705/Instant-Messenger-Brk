@@ -20,12 +20,11 @@
                 <input class='inputField' type='text' placeholder='Please Enter a Carrier Code: '
                     onkeyup='checkInput()'></input>
             </div>
-            <div style='padding-top: 20px;'></div>
-            <label class="switch"> 
-                <input type="checkbox" onclick="unreadFilter()">
-                <span class="slider">
-                    <div class = 'buttonTextStyle'>All Messages</div></span>
-            </label>
+            <div style='padding-top: 25px;'></div>
+            <label class="container">Show Unread Messages
+                <input type="checkbox" checked="checked" onclick="unreadFilter()">
+                <span class="checkmark"></span>
+              </label>
             <div class='userInpWrapper'>
                 <ul class='searchUserInp' id='carrList' aria-label="Select Carrier"></select>
             </div>

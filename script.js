@@ -189,22 +189,32 @@ function loadUsers(userId, isOpen, currentCarrierId) {
 //switching the active selected truck....
 var testVar;
 let updatedCarr = 0;
+let updatedCarrCircle = ''
 function switchSelectedTruck(truck, userContainer) {
+    console.log(userContainer)
+    console.log(truck)
     updatedCarr = parseInt(userContainer)
-    console.log(document.getElementById(updatedCarr).innerHTML)
-    updatedCarr = document.getElementById(updatedCarr).innerHTML.replace('<i class="fas fa-circle"></i>', "");
-    console.log(updatedCarr)
-    console.log(truck.innerHTML)
-    truck.innerHTML = truck.innerHTML.replace('<i class="fas fa-circle"></i>', "")
+    updatedCarrCircle = document.getElementById(updatedCarr).innerHTML.replace('<i class="fas fa-circle"></i>', "");
+    truck.innerHTML = truck.innerHTML.replace('<i class="fas fa-circle"></i>', "");
+    let driverList = document.getElementById(userContainer).childNodes;
+    driverList = Array.from(driverList);
+    driverList = driverList.filter(driver => document.getElementById(driver.id).innerHTML.includes('<i class="fas fa-circle"></i>'));
+    console.log(driverList);
+    if(driverList.length === 0 && document.getElementById(userContainer.substr(0, 1)).innerHTML.includes('<i class="fas fa-circle"></i>')){
+        console.log(document.getElementById(userContainer.substr(0, 1)).innerHTML)
+        let carrierName = document.getElementById(userContainer.substr(0, 1)).innerHTML.replace('<i class="fas fa-circle"></i>', "");
+        document.getElementById(userContainer.substr(0, 1)).innerHTML = carrierName;
+        console.log(document.getElementById(userContainer.substr(0, 1)))
+    }
     //set the title to whichever driver's messages you are viewing.
-    document.getElementById('currentViewTitle').innerHTML = '<div id = "titleCont">' + '<b>' + updatedCarr + '</b> ' + ' -' + truck.innerHTML + '</pre>' + '</div>';
+    document.getElementById('currentViewTitle').innerHTML = '<div id = "titleCont">' + '<b>' + updatedCarrCircle + '</b> ' + ' -' + truck.innerHTML + '</pre>' + '</div>';
     currentTruck = truck.innerHTML;
     currentElement = document.getElementsByClassName("boxActive");
     if (currentElement.length != 0) {
         currentElement[0].classList.remove('boxActive')
     }
     truck.classList.add('boxActive');
-    currentCarrier = updatedCarr.substr(0, 6);
+    currentCarrier = updatedCarrCircle.substr(0, 6);
     loadMessages(truck.innerHTML, 'newView', currentCarrier);
 }
 let buttonOn = '';
@@ -222,7 +232,7 @@ function unreadFilter() {
             carriersArray = Array.from(carriersArray);
             console.log(buttonOn)
             if (buttonOn !== true) {
-                document.querySelector('.slider').innerHTML = '<div class = "buttonTextStyle">' + 'Unread Messages' + '</div>';
+                // document.querySelector('.slider').innerHTML = '<div class = "buttonTextStyle">' + 'Unread Messages' + '</div>';
                 for (let i = 0; i < url['hits'].length; i++) {
                     if (url['hits'][i]['UNREAD'] == 0) {
                         unreadCount++;
@@ -242,7 +252,7 @@ function unreadFilter() {
             }
             else {
                 document.querySelector('.searchUserBox').style = 'padding-bottom: 0px'
-                document.querySelector('.slider').innerHTML = '<div class = "buttonTextStyle">' + 'All Messages' + '</div>';
+                // document.querySelector('.slider').innerHTML = '<div class = "buttonTextStyle">' + 'All Messages' + '</div>';
                 console.log('entering button off')
                 carriersArray.forEach(carrier => carrier.style.display = 'block');
                 for(let i = 0; i < carriersArray.length; i++){
@@ -343,11 +353,9 @@ function searchCleanup(openUsers) {
 //filters out carriers when user searches....
 function checkInput() {
     let openUsers = document.getElementsByClassName('userSelectBox');
-
     //removing users from other carriers when searching...
     openUsers = searchCleanup(openUsers)
     let carrierCount = 0;
-
     let userInp = document.querySelector('.inputField').value
     userInp = userInp.toUpperCase();
     //filters out the carriers as characters are entered....
