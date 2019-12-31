@@ -127,7 +127,7 @@ function loadUsers(userId, isOpen, currentCarrierId) {
                 let enlargeCont = 100 / myTrucks.length
                 let factor = 1;
                 let total_height = 0;
-                
+
                 //recursively displaying users when a carrier is selected...
                 displayAnimation(enlargeCont, factor, 0);
                 //if all of the trucks have been displayed, break out of the loop.
@@ -222,6 +222,7 @@ function unreadFilter() {
             carriersArray = Array.from(carriersArray);
             console.log(buttonOn)
             if (buttonOn !== true) {
+                document.querySelector('.slider').innerHTML = '<div class = "buttonTextStyle">' + 'Unread Messages' + '</div>';
                 for (let i = 0; i < url['hits'].length; i++) {
                     if (url['hits'][i]['UNREAD'] == 0) {
                         unreadCount++;
@@ -241,6 +242,7 @@ function unreadFilter() {
             }
             else {
                 document.querySelector('.searchUserBox').style = 'padding-bottom: 0px'
+                document.querySelector('.slider').innerHTML = '<div class = "buttonTextStyle">' + 'All Messages' + '</div>';
                 console.log('entering button off')
                 carriersArray.forEach(carrier => carrier.style.display = 'block');
                 for(let i = 0; i < carriersArray.length; i++){

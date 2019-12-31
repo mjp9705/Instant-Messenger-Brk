@@ -472,7 +472,7 @@ border-radius: 50%;
 .switch {
 position: relative;
 display: inline-block;
-width: 60px;
+width: 215px;
 height: 34px;
 }
 
@@ -489,7 +489,7 @@ top: 0;
 left: 0;
 right: 0;
 bottom: 0;
-background-color: rgb(82, 80, 80);
+background-color: rgb(154, 153, 153);
 -webkit-transition: .4s;
 transition: .4s;
 }
@@ -523,18 +523,20 @@ box-shadow: 0 0 1px #2196F3;
       font-size: 220px;
       }
 input:checked + .slider:before {
--webkit-transform: translateX(26px);
--ms-transform: translateX(26px);
-transform: translateX(26px);
+-webkit-transform: translateX(180px);
+-ms-transform: translateX(180px);
+transform: translateX(180px);
 }
-
+.buttonTextStyle{
+  padding-top:10px;
+}
 /* Rounded sliders */
-.slider.round {
-border-radius: 34px;
+.slider {
+/* border-radius: 34px; */
 }
 
-.slider.round:before {
-border-radius: 50%;
+.slider:before {
+border-radius: 100%;
 }
 
 @media only screen and (max-width: 1400px){
