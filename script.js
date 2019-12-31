@@ -7,6 +7,8 @@ let currentCarrierId = '';
 let totalOpens = 0; // counting the total amount of times opened to keep track consistent
 let carrStatus = {};
 let currentCarrier = '';
+let updatedCarrier = '';
+let updatedTruck = '';
 let userCount = {};
 let preceedingUsers = 0;
 let idContainer = [];
@@ -21,6 +23,7 @@ let spinnerCt = 0;
 let spinnerObj = {};
 
 function loadUsers(userId, isOpen, currentCarrierId) {
+    console.log(currentCarrierId);
     //fixing issue for carriers beginning with 'A&'....
     if (document.getElementById(userId).innerHTML.substr(0, 2) === 'A&') {
         currentCarrier = document.getElementById(userId).innerHTML.substr(0, 2) + document.getElementById(userId).innerHTML.substr(6, 10)
@@ -29,6 +32,7 @@ function loadUsers(userId, isOpen, currentCarrierId) {
         //grab strictly the carrier code from the div's innerHTML....
         currentCarrier = document.getElementById(userId).innerHTML.substr(0, 6); //assure only the drivercode is retrieved from the innerHTML
     }
+
     if (isOpen === 'open') {
         //Display the carrier code when selected
         document.getElementById('currentViewTitle').innerHTML = 'Instant Messages - ' + currentCarrier;
@@ -88,6 +92,12 @@ function loadUsers(userId, isOpen, currentCarrierId) {
                         createUser.classList.add('userSelectBox');
                         truckID = 'truckID' + x;
                         createUser.id = truckID;
+                        if (url['hits'][x]['UNREAD'] > 0) {
+                            createUser.innerHTML += '<i class="fas fa-circle"></i>';
+                        }
+                        else {
+                            document.getElementById(currentCarrierId).innerHTML.replace('<i class="fas fa-circle"></i>', "")
+                        }
                         createUser.onclick = function () { switchSelectedTruck(this, userId) };
                         createUser.onclick = function () { switchSelectedTruck(this, userId) };
                         userId = parseInt(userId, 10)
@@ -179,9 +189,12 @@ function loadUsers(userId, isOpen, currentCarrierId) {
 var testVar;
 let updatedCarr = 0;
 function switchSelectedTruck(truck, userContainer) {
-    console.log('user cont: ' + userContainer)
     updatedCarr = parseInt(userContainer)
-    updatedCarr = document.getElementById(updatedCarr).innerHTML;
+    console.log(document.getElementById(updatedCarr).innerHTML)
+    updatedCarr = document.getElementById(updatedCarr).innerHTML.replace('<i class="fas fa-circle"></i>', "");
+    console.log(updatedCarr)
+    console.log(truck.innerHTML)
+    truck.innerHTML = truck.innerHTML.replace('<i class="fas fa-circle"></i>', "")
     //set the title to whichever driver's messages you are viewing.
     document.getElementById('currentViewTitle').innerHTML = '<div id = "titleCont">' + '<b>' + updatedCarr + '</b> ' + ' -' + truck.innerHTML + '</pre>' + '</div>';
     currentTruck = truck.innerHTML;
@@ -193,11 +206,57 @@ function switchSelectedTruck(truck, userContainer) {
     currentCarrier = updatedCarr.substr(0, 6);
     loadMessages(truck.innerHTML, 'newView', currentCarrier);
 }
-
+let buttonOn = '';
+let unreadCount = 0;
+function unreadFilter() {
+    $.ajax({
+        type: "GET",
+        async: false,
+        dataType: 'json',
+        url: "grabCarriers.php",
+        success: function (url) {
+            console.log('test')
+            let driverIds = '';
+            let carriersArray = document.querySelectorAll('.carrierSelectBox');
+            carriersArray = Array.from(carriersArray);
+            console.log(buttonOn)
+            if (buttonOn !== true) {
+                for (let i = 0; i < url['hits'].length; i++) {
+                    if (url['hits'][i]['UNREAD'] == 0) {
+                        unreadCount++;
+                        document.getElementById(carriersArray[i].id).style.display = 'none';
+                        driverIds = i + 'cont';
+                        if (document.getElementById(driverIds) !== null) {
+                            document.getElementById(driverIds).style.display = 'none';
+                        }
+                    }
+                }
+                console.log(unreadCount)
+                if(unreadCount === 4){
+                    document.querySelector('.searchUserBox').style = 'padding-bottom: 10px'
+                }
+                unreadCount = 0;
+                buttonOn = true;
+            }
+            else {
+                document.querySelector('.searchUserBox').style = 'padding-bottom: 0px'
+                console.log('entering button off')
+                carriersArray.forEach(carrier => carrier.style.display = 'block');
+                for(let i = 0; i < carriersArray.length; i++){
+                    carriersArray[i].style.display = 'block';
+                    console.log(carriersArray[i])
+                    if(document.getElementById(carriersArray[i].id + 'cont') !== null){
+                    document.getElementById(carriersArray[i].id + 'cont').style.display = 'block';
+                    }
+                }
+                buttonOn = false;
+            }
+        }
+    });
+}
 //loading messages
 let truckMsgs = {};
 function loadMessages(truckCode, discreet, currentCarrier) {
-    // truckCode = truckCode.substr(0, 6);
     if (discreet == 'hidden') {
         messageView = document.getElementById("dispMessages");
     } else {
@@ -212,9 +271,11 @@ function loadMessages(truckCode, discreet, currentCarrier) {
         dataType: 'json',
         url: "grabMessages.php",
         success: function (url) {
+            updateMsgStatus(currentCarrier, truckCode.substr(0, 6));
             historyLength = url['hits'].length;
             messageView = document.getElementById("dispMessages");
             messageView.innerHTML = '';
+            console.log(currentCarrier);
             if (historyLength == 0) {
                 test = "<div class='centerEmpty'><i class='fal fa-comment-alt-slash'></i><br><p class='emptyText'>No messages available<br></p></div>";
                 messageView.innerHTML = test;
@@ -245,6 +306,18 @@ function loadMessages(truckCode, discreet, currentCarrier) {
             }
             //most recent (bottom) messages show when the user selects a truck.
             window.scrollTo(0, document.getElementById('dispMessages').scrollHeight);
+        }
+    });
+}
+function updateMsgStatus(carrier, theTruck) {
+    $.ajax({
+        type: "POST",
+        data: { "carrier": carrier, "truck": theTruck },
+        async: true,
+        dataType: 'json',
+        url: "updateMsgStatus.php",
+        success: function (url) {
+            //do nothing
         }
     });
 }
@@ -293,7 +366,6 @@ function checkInput() {
         }
     }
 }
-
 let carrierHolder = [];
 function loadCarriers() {
     $.ajax({
@@ -302,12 +374,20 @@ function loadCarriers() {
         dataType: 'json',
         url: "grabCarriers.php",
         success: function (url) {
+            let unreadMsgs = false;
             //creating and loading carriers whilst monitoring the open/close status of the carriers
             for (i = 0; i < url['hits'].length; i++) {
                 createOption = document.createElement('li');
                 createOption.innerHTML = url['hits'][i]['LBCARR'];
                 createOption.classList.add('carrierSelectBox')
                 createOption.setAttribute("id", i);
+
+                //adding a symbol to indicate carriers w/unread msgs...
+                if (url['hits'][i]['UNREAD'] > 0) {
+                    console.log('entering true')
+                    createOption.innerHTML += '<i class="fas fa-circle"></i>'
+                    unreadMsgs = true;
+                }
                 let messageView = document.getElementById('dispMessages');
                 let userGuidance = "<div class='centerEmpty'><i class='fad fa-truck-moving'></i><br><p class='emptyText'>Select a truck number<br></p></div>";
                 messageView.innerHTML = userGuidance;
@@ -327,6 +407,7 @@ function loadCarriers() {
                         }
                         carrStatus[this.id] = 'closed';
                         document.getElementById(this.id).innerHTML += '';
+                        console.log(unreadMsgs);
                         loadUsers(this.id, carrStatus[this.id], null)
                     }
                     else {
@@ -334,6 +415,7 @@ function loadCarriers() {
                         clearOld = currentCarrierId;
                         currentCarrierId = this.id;
                         document.getElementById(currentCarrierId).innerHTML += '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>';
+                        console.log(unreadMsgs);
                         loadUsers(this.id, carrStatus[this.id], currentCarrierId)
                     }
 
@@ -342,7 +424,6 @@ function loadCarriers() {
         }
     });
 }
-
 //message sending (Brad)
 function sendMessage() {
     document.getElementById('sendMessage').disabled = true;
@@ -411,7 +492,7 @@ var theTimer = setInterval(function () {
     if (currentTruck !== '') {
         loadMessages(currentTruck, 'hidden', currentCarrier)
     }
-}, 60 * 100); //runs every minute
+}, 60 * 1000); //runs every minute
 
 loadCarriers();
 

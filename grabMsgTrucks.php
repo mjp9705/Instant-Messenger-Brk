@@ -4,7 +4,7 @@ $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $givenCarrier = $_POST['carrier'];
 
-$sqlGrabTrucks = 'SELECT LTPRMTRK AS LTTRKCODE, LTCTMTRK AS LTDSPTRK from EDGETSTLIB.LOAPPTRK where LTPRMCAR = :carrier ORDER BY LTTRKCODE';
+$sqlGrabTrucks = "SELECT LTPRMTRK AS LTTRKCODE, LTCTMTRK AS LTDSPTRK, (SELECT COUNT(*) from edgetstlib.loappsts where LSPFLG <> 'Y' AND LTPRMTRK = LSTRK AND LSEVENT = 'MESSAGEIN') as UNREAD from EDGETSTLIB.LOAPPTRK where LTPRMCAR = :carrier ORDER BY LTTRKCODE";
 
 
 $getTrucks = $con->prepare($sqlGrabTrucks);
