@@ -127,6 +127,7 @@ function loadUsers(userId, isOpen, currentCarrierId) {
                 let enlargeCont = 100 / myTrucks.length
                 let factor = 1;
                 let total_height = 0;
+                
                 //recursively displaying users when a carrier is selected...
                 displayAnimation(enlargeCont, factor, 0);
                 //if all of the trucks have been displayed, break out of the loop.
