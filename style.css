@@ -532,7 +532,7 @@ transform: translateX(180px);
 }
 /* Rounded sliders */
 .slider {
-/* border-radius: 34px; */
+border-radius: 34px;
 }
 
 .slider:before {
